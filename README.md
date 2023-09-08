@@ -20,16 +20,24 @@ At present, the most straightforward way to install this plugin is to:
 5. Optionally click the puzzle piece and pin the extension for easy access
 
 ## Usage
-The program requires an API key/token from AudD.io.  You simply plug this in to the box labeled "AudD.io API Key"
+
+### API Token
+The program requires an API key/token from AudD.io.  You simply plug this in to the box labeled "AudD.io API Key".
+
+See below for more info on 
+AudD.io currently offers to allow you 300 requests at no charge.  Then it's $5 for up to 1000 requests, and then it's $5 after that. 
+For clarification, it would be $10 after you make 2000 requests.
 
 
 ### API Requests Limit
-As a rule of them, the number of requests required is approximately 
+Music2CSV analyzes a 12 second chunk every 108 seconds of audio.  Analyzing one chunk constitutes a "request" to AudD.io.
+As a rule of them, the number of requests required is approximately: 
 `L / 120`
 ...where L is the length of the file in seconds.
-So for example, a 4 hour audio file would have 4 * 60 * 00 seconds of audio, or 14400 seconds.
+So for example, a 4 hour audio file would have 4 * 60 * 60 seconds of audio, or 14400 seconds.
 The number of requests would be:
-`14400 / 120 = 120 Requests`
+`14400 / 120 = 120`
+120 Requests
 
 
 ### File

@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>MusRec</title>
+<script src="../scripts/jquery/jquery-3.7.1.min.js"> </script>
+</head>
+
+<body>
+<h1>MusRec</h1>
+
+<font size="1">
+Uses <a href="https://audd.io/" target="_blank">Audd.io</a> enterprise edition to identify music in large files. <br>
+</font>
+<p> </p>
+<form id="myForm">
+  <label for="api_key">AudD.io API Key:</label>
+  <br>
+  <input type="text" id="api_token" name="api_token" value=""><br><br>
+
+  
+    <label for="limit">API Requests Limit (1-100):</label>
+  <br>
+  (Safe estimate: 2-3x no. of songs)
+  <br>
+  <input type="number" id="limit" name="limit" min="1" max="100" value="10"><br><br>
+
+  <!-- <label for="every">Every (1-100):</label>
+  <input type="number" id="every" name="every" min="1" max="100" value="1"><br><br>
+
+  <label for="skip">Skip (1-100):</label>
+  <input type="number" id="skip" name="skip" min="1" max="100" value="9"><br><br> -->
+
+  <label for="file_upload">Local file to upload:</label>
+  <br>
+  <input type="file" id="the_file" name="the_file"><br><br>
+  <input type="hidden" name="MAX_FILE_SIZE" value="500000000" />  <!-- 500MB -->
+  
+<!--   
+  <label for="dry_run">Dry run mode:</label>
+  <input type="checkbox" id="dry_run" name="dry_run" checked ><br><br> -->
+
+<br><br>
+  <input type="submit" value="Submit">
+</form>
+
+<!-- <label for="file_upload">Local file to upload:</label>
+  <input type="file" id="file"><br><br> -->
+
+  <!-- Create a hidden div for the output -->
+  <div id="output">
+    <!-- <h3>Output:</h3> -->
+    <p id="output_text"></p>
+  </div>
+
+  
+
+<script src="./new_popup.js"></script>
+</body>
+

@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,  
+  "name": "MusRec",
+  "description": "Create spreadsheet of playlists from music files (music recognition)",
+  "version": "1.0",
+  "host_permissions": [
+    "https://enterprise.audd.io/"
+  ],
+  "content_scripts": [
+    {
+    //   "css":["/css/jquery/jquery-ui.min.css", "/css/jquery/jquery-ui.structure.min.css"],
+      "js":["/scripts/jquery/jquery-3.7.1.min.js"],
+      "matches": ["*://*/*"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "icons/musrec.png"
+  }
+  
+}

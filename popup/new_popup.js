@@ -1,5 +1,5 @@
 /*********************************************************************/
-/* Title: MusRec */
+/* Title: Music2CSV */
 /* Author: Scott McGrath */
 /* Date: 2023-09-07 */
 /* Purpose: Chrome extension that will take a file and send it to the audd.io enterprise API for processing. */

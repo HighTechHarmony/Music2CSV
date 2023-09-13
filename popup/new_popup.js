@@ -41,11 +41,6 @@ reader.onload = function(e) {
 
 reader.readAsText(keyFile);
 
-// fs.readFile('api_key.txt', 'utf8' , (err, data) => {
-//     if (err) {
-//         console.error(err);
-//         return;
-//     }
 console.log(api_file_contents);
 
 if (api_file_contents != null) {
@@ -84,17 +79,6 @@ form.addEventListener('submit', async (e) => {
     // }
 
     skip = 9;
-
-
-    // // See if the dry_run checkbox is checked    
-    // const dryRunCheckbox = document.getElementById('dry_run');
-    // if (dryRunCheckbox.checked) {
-    //     console.log('Dry run is checked');
-    //     dry_run = true;
-    // } else {
-    //     console.log('Dry run is not checked');
-    //     dry_run = false;
-    // }
 
     dry_run = false;
 
@@ -160,7 +144,8 @@ async function doRequest() {
         } catch (error) {
             console.error(error);
         }
-    }
+    }   // End of if (dry_run == false)
+
         
 } // End of doRequest function
 
@@ -186,35 +171,27 @@ function createCSV(results)
             
             // Iterate through the songs array for each result
             for (let j = 0; j < songs.length; j++) {
-                const song = songs[j];                
-
-                console.log ("offset: " + results[i].offset);
-                console.log ("start_offset: " + results[i].songs[j].start_offset);
+                const song = songs[j];
+                
+                // console.log ("start_offset: " + results[i].songs[j].start_offset);
 
                 // const songTime = parseInt(results[i].offset,10) + parseInt(results[i].songs[j].start_offset,10);
                 // The song time is the offset mm:ss + start_offset seconds
                 // Convert the offset to seconds
+                                
                 const offset = results[i].offset;
-                const offsetMinutes = parseInt(offset.substring(0,2),10);
-                const offsetSeconds = parseInt(offset.substring(3,5),10);
-                const offsetSecondsTotal = offsetMinutes * 60 + offsetSeconds;
-                // console.log("offsetSecondsTotal: " + offsetSecondsTotal);
-
-                // Add the start offset
-                const startOffset = results[i].songs[j].start_offset;
-                const startOffsetSeconds = parseInt(startOffset,10);
-                // console.log("startOffsetSeconds: " + startOffsetSeconds);
-                songTime = offsetSecondsTotal + startOffsetSeconds;
+                console.log ("offset: " + offset);
+                console.log ("startoffset: " + results[i].songs[j].start_offset);
+                console.log ("timecode: " + results[i].songs[j].timecode);
                 
 
-                console.log("songTime: " + songTime);
+                songTimeFormatted = offset;
+                // This attempts to instead calculate the start position of the song, but it's often wrong and not really useful I think
+                // songTimeFormatted = subtractTimes(offset, results[i].songs[j].timecode);
 
-                // Convert this to mm:ss format
-                const minutes = pad(Math.floor(songTime / 60),2);
-                console.log("minutes: " + minutes);
-                const seconds = pad(songTime - (minutes * 60),2);
-                console.log("seconds: " + seconds);
-                const songTimeFormatted = minutes + ":" + seconds;
+
+                // This adds the offset into the 12 second block that it was found in, makes it a little more accurate
+                songTimeFormatted = addTimes(offset, msToTime(results[i].songs[j].start_offset ));
 
                 // const songTime = song.timecode;
                 const songTitle = song.title;
@@ -257,6 +234,53 @@ function pad(n, width, z) {
     z = z || '0';
     n = n + '';
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
+
+// Convenience function to add two times together
+function addTimes(time1, time2) {
+    const [hours1, minutes1] = time1.split(':').map(Number);
+    const [hours2, minutes2] = time2.split(':').map(Number);
+  
+    const totalMinutes = (hours1 + hours2) * 60 + minutes1 + minutes2;
+    const hours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+    const minutes = (totalMinutes % 60).toString().padStart(2, '0');
+  
+    return `${hours}:${minutes}`;
+  }
+
+// Convenience function to subtract time2 from time1, returns 00:00 if the result is negative
+function subtractTimes(time1, time2) {
+    const [hours1, minutes1] = time1.toString().split(':').map(Number);
+    const [hours2, minutes2] = time2.toString().split(':').map(Number);
+
+    const totalMinutes = (hours1 - hours2) * 60 + minutes1 - minutes2;
+    if (totalMinutes < 0) {
+        return "00:00";
+    }
+    else {
+        const hours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+        const minutes = (totalMinutes % 60).toString().padStart(2, '0');
+
+        return `${hours}:${minutes}`;
+    }
+}
+
+// Convenience function to convert miliseconds to mm:ss
+function msToTime(duration) {
+    var milliseconds = parseInt((duration%1000)/100)
+        , seconds = parseInt((duration/1000)%60)
+        // , minutes = parseInt((duration/(1000*60))%60)
+        , minutes = parseInt((duration/(1000*60)))
+        // , hours = parseInt((duration/(1000*60*60))%24);
+        , hours = parseInt((duration/(1000*60*60)));
+
+    // hours = (hours < 10) ? "0" + hours : hours;
+    // minutes = (minutes < 10) ? "0" + minutes : minutes;
+    // seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    // return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+    return minutes + ":" + seconds;
 }
 
 
